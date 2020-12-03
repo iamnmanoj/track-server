@@ -1,8 +1,10 @@
 require('./models/user');
+require('./models/track');
 require('./middlewares/requireAuth');
 const express = require('express');
 const mongoose = require('mongoose');
 const authRoutes = require('./routes/authRoutes');
+const trackRoutes = require('./routes/track-routes');
 const bodyParser = require('body-parser');
 const requireAuth = require('./middlewares/requireAuth');
 
@@ -17,7 +19,9 @@ mongoose.connect(connectionString, {
 });
 
 app.use(bodyParser.json());
+// app.use(requireAuth);
 app.use(authRoutes);
+app.use(trackRoutes);
 
 mongoose.connection.on('connected', () => {
     console.log('Connected to mongoose instance');
@@ -27,7 +31,7 @@ mongoose.connection.on('error', (e) => {
     console.log('Error connecting to mongoose', e);
 })
 
-app.get('/', requireAuth, (req, res) => {
+app.get('/', (req, res) => {
     res.send(`Your email:${req.user.email}`);
 });
 
